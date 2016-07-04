@@ -1,0 +1,15 @@
+{{#if items}}
+<thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Rarity</th>
+        <th>Actions</th>
+    </tr>
+</thead>
+<tbody>
+    {{#each items as |item|}}
+        {{game-item item=item}}
+    {{/each}}
+</tbody>
+{{/if}}

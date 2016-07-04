@@ -1,0 +1,8 @@
+<h4>Set API key</h4>
+{{#bs-form action='set' formLayout='inline' model=this}}
+    {{bs-form-element controlType='text' property='key' label='Key'}}
+    {{#bs-button-group}}
+        {{bs-button type='primary' buttonType='submit' defaultText='Set'}}
+        {{bs-button buttonType='reset' type='danger' action='reset' defaultText='Reset'}}
+    {{/bs-button-group}}
+{{/bs-form}}
