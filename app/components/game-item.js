@@ -61,7 +61,7 @@ export default Ember.Component.extend({
     }
 
     let groupedItem = this.get('item');
-    let item = groupedItem.items.pop();
+    let item = groupedItem.items[0];
 
     item.deleteRecord();
     item.save();
