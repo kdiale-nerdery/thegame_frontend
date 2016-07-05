@@ -9,8 +9,8 @@
     </tr>
 </thead>
 <tbody>
-    {{#each-in groupedItems as |key item|}}
+    {{#each groupedItems as |item|}}
         {{game-item item=item}}
-    {{/each-in}}
+    {{/each}}
 </tbody>
 {{/if}}

@@ -9,7 +9,22 @@ export default Ember.Component.extend({
 
     this.get('items').map(this.mapItems.bind(this, groupedItems));
 
-    return groupedItems;
+    let groupedItemsArray = [];
+    for (let k in groupedItems) {
+      if (groupedItems.hasOwnProperty(k)) {
+        groupedItemsArray.push(groupedItems[k]);
+      }
+    }
+
+    groupedItemsArray.sort(function(a, b) {
+      if (a.name > b.name) {
+        return 1;
+      }
+
+      return -1;
+    });
+
+    return groupedItemsArray;
   }),
 
   itemsDidChange() {

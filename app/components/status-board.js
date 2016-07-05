@@ -6,14 +6,14 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    this.scheduleLoopTick();
+    this.schedulePointLoopTick();
   },
 
   pointLoop() {
     if (localStorage.getItem('apikey')) {
       this.retrieveInformation();
     } else {
-      this.scheduleLoopTick();
+      this.schedulePointLoopTick();
     }
   },
 
@@ -33,13 +33,13 @@ export default Ember.Component.extend({
         apikey: localStorage.getItem('apikey')
       }
     }).then(response => {
-      this.scheduleLoopTick();
+      this.schedulePointLoopTick();
 
       if (response && response.ok) {
         response.json().then(this.processRequest.bind(this));
       }
     }).catch(() => {
-      this.scheduleLoopTick();
+      this.schedulePointLoopTick();
     });
   },
 
@@ -61,7 +61,7 @@ export default Ember.Component.extend({
     }
   },
 
-  scheduleLoopTick() {
+  schedulePointLoopTick() {
     Ember.run.later(this, this.pointLoop, 1100);
   }
 });

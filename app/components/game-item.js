@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import ENV from '../config/environment';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
@@ -34,27 +33,7 @@ export default Ember.Component.extend({
 
       const item = this.get('item').items[0];
 
-      let url;
-      let uuid = item.get('uuid');
-      if (!target) {
-        url = `${ENV.gameURL}/items/use/${uuid}`;
-      } else {
-        url = `${ENV.gameURL}/items/use/${uuid}?target=${target}`;
-      }
-
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          apikey: localStorage.getItem('apikey')
-        }
-      }).then(response => {
-        localStorage.setItem('lastItemUse', new Date());
-        if (response && response.ok) {
-          response.json().then(this.processRequest.bind(this));
-        }
-      }).catch(error => {
-        console.log(error);
-      });
+      item.use(target);
     },
 
     toss() {
@@ -63,7 +42,7 @@ export default Ember.Component.extend({
 
       if (tossConfirm) {
         let groupedItem = this.get('item');
-        let item = groupedItem.items.pop();
+        let item = groupedItem.items[0];
 
         item.deleteRecord();
         item.save();
