@@ -62,6 +62,6 @@ export default Ember.Component.extend({
   },
 
   schedulePointLoopTick() {
-    Ember.run.later(this, this.pointLoop, 1100);
+    Ember.run.later(this, this.pointLoop, 1000);
   }
 });

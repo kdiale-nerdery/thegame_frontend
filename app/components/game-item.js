@@ -17,7 +17,7 @@ export default Ember.Component.extend({
           this.get('store').createRecord(
             'message',
             {
-              content: 'Too use to use an item! You may only use an item every 60 seconds.'
+              content: 'Too early to use an item! You may only use an item every 60 seconds.'
             }
           ).save();
 
