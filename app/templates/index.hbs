@@ -1,7 +1,7 @@
 <div class="container">
     {{message-list messages=model.messages}}
     <div class='row'>
-        <div class='col-xs-6 col-xs-push-3 well'>
+        <div class='col-xs-4 well'>
             <div class='row'>
                 <div class='col-xs-12'>
                     {{manage-api-key}}
@@ -18,8 +18,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class='row'>
-        {{game-item-list items=model.items}}
+        <div class='col-xs-8'>
+            <div class='game-item-list'>
+                {{game-item-list items=model.items}}
+            </div>
+        </div>
     </div>
 </div>

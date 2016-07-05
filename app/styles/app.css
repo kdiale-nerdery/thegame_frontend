@@ -1,0 +1,5 @@
+.game-item-list {
+    height: 700px;
+    overflow-y: auto;
+    display: block;
+}

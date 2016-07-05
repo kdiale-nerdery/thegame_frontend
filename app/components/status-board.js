@@ -18,6 +18,15 @@ export default Ember.Component.extend({
   },
 
   retrieveInformation() {
+    const lastItemUseRaw = localStorage.getItem('lastItemUse');
+    const lastItemUse = new Date(Date.parse(lastItemUseRaw));
+
+    if (lastItemUse) {
+      let now = new Date();
+      let differenceInSeconds = (now - lastItemUse) / 1000;
+
+      this.set('secondsSinceLastUse', Math.round(differenceInSeconds));
+    }
     fetch(`${ENV.gameURL}/points`, {
       method: 'POST',
       headers: {
