@@ -27,11 +27,6 @@ export default Ember.Component.extend({
     return groupedItemsArray;
   }),
 
-  itemsDidChange() {
-    console.log('what is up');
-    this.send('groupedItemsChanged');
-  },
-
   mapItems(groupedItems, item) {
     const itemName = item.get('name');
 
