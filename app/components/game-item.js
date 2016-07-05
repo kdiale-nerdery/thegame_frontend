@@ -13,11 +13,11 @@ export default Ember.Component.extend({
         let now = new Date();
         let differenceInSeconds = (now - lastItemUse) / 1000;
 
-        if (differenceInSeconds < 60) {
+        if (differenceInSeconds < 61) {
           this.get('store').createRecord(
             'message',
             {
-              content: 'Too use to use an item!'
+              content: 'Too use to use an item! You may only use an item every 60 seconds.'
             }
           ).save();
 
