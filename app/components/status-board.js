@@ -44,8 +44,6 @@ export default Ember.Component.extend({
   },
 
   processRequest(json) {
-    console.log(json);
-
     this.set('points', json.Points);
     this.set('effects', json.Effects.join(', '));
 
