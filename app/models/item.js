@@ -8,6 +8,7 @@ export default Model.extend({
   name: attr(),
   description: attr(),
   rarity: attr(),
+  bonusRegex: /<([0-9a-f-]+)>.*\| <([\w ]+)>/,
 
   use(target, addMessage = true) {
     let url;
@@ -34,8 +35,22 @@ export default Model.extend({
   },
 
   processRequest(addMessage, json) {
-    if (addMessage) {
-      for (let message of json.Messages) {
+    for (let message of json.Messages) {
+      let matches = this.bonusRegex.exec(message);
+
+      if (matches) {
+        console.log('Item uuid ' + matches[1]);
+        console.log('Creating item ' + matches[2]);
+        this.get('store').createRecord(
+          'item',
+          {
+            name: matches[2],
+            uuid: matches[1]
+          }
+        );
+      }
+
+      if (addMessage && !matches) {
         this.get('store').createRecord(
           'message',
           {

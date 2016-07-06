@@ -8,6 +8,8 @@ export default Ember.Component.extend({
     'Rush the Dog',
     '7777',
     'Buffalo',
+    'Pokeball',
+    'Da Da Da Da Daaa Da DAA da da',
     'Biggs',
     'Wedge',
     'Pizza',
