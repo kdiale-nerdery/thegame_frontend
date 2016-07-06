@@ -4,9 +4,10 @@ export default Ember.Component.extend({
   store: Ember.inject.service(),
   passiveItems: [
     'Moogle',
+    '7777',
     'Warthog',
     'Rush the Dog',
-    '7777',
+    'Miniature Giant Space Hamster',
     'Buffalo',
     'Biggs',
     'Wedge',
