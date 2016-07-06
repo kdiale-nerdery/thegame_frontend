@@ -136,6 +136,7 @@ export default Ember.Component.extend({
     });
 
     if (validTargets) {
+      console.log('Attempting to use ' + item.get('name'));
       item.use(validTargets[0].get('PlayerName'), false);
     }
   },

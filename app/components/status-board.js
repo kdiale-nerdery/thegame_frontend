@@ -34,10 +34,6 @@ export default Ember.Component.extend({
     localStorage.setItem('effects', json.Effects.join(', '));
     this.set('effects', json.Effects.join(', '));
 
-    if (!localStorage.getItem('you')) {
-      localStorage.setItem('you', json.PlayerName);
-    }
-
     if (json.Item) {
       let fields = json.Item.Fields[0];
       this.get('store').createRecord(
