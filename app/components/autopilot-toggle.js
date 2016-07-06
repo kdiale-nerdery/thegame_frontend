@@ -51,7 +51,7 @@ export default Ember.Component.extend({
   },
 
   scheduleItemLoopTick() {
-    Ember.run.later(this, this.automateItemUsage, 1000 * 61);
+    Ember.run.later(this, this.automateItemUsage, 1000);
   },
 
   retrieveItems() {
@@ -173,7 +173,7 @@ export default Ember.Component.extend({
   automateItemUsage() {
     this.secondsSinceLastItemUse();
 
-    if (localStorage.getItem('apikey') && (this.get('secondsSinceLastUse') > 1)) {
+    if (localStorage.getItem('apikey') && (this.get('secondsSinceLastUse') > 61)) {
       this.retrieveItems().then(this.routeAutopilotMode.bind(this));
     } else {
     }
