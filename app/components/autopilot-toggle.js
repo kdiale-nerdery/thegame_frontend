@@ -5,8 +5,9 @@ export default Ember.Component.extend({
   passiveItems: [
     'Moogle',
     'Warthog',
-    'Mushroom',
     'Rush the Dog',
+    '7777',
+    'Mushroom',
     'Buffalo',
     'Biggs',
     'Wedge',
