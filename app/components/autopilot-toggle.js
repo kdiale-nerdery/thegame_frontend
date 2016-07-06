@@ -12,7 +12,6 @@ export default Ember.Component.extend({
     'Wedge',
     'Pizza',
     'Pokeball',
-    'Da Da Da Da Daaa Da DAA da da',
     'UUDDLRLRBA',
     'Bo Jackson'
   ],
@@ -136,6 +135,7 @@ export default Ember.Component.extend({
     });
 
     if (validTargets) {
+      console.log('Selecting target ' + validTargets[0].get('PlayerName'));
       console.log('Attempting to use ' + item.get('name'));
       item.use(validTargets[0].get('PlayerName'), false);
     }
