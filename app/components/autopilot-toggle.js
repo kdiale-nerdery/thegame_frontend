@@ -7,7 +7,6 @@ export default Ember.Component.extend({
     'Warthog',
     'Rush the Dog',
     '7777',
-    'Mushroom',
     'Buffalo',
     'Biggs',
     'Wedge',
