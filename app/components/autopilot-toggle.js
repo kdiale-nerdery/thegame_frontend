@@ -11,7 +11,6 @@ export default Ember.Component.extend({
     'Biggs',
     'Wedge',
     'Pizza',
-    'Pokeball',
     'UUDDLRLRBA',
     'Bo Jackson'
   ],
