@@ -1,0 +1,8 @@
+<p><b>Autopilot</b></p>
+<p>
+    <select class='form-control' {{action 'selectAutoPilotMode' on='change'}}>
+        {{#each autopilotOptions key='@index' as |item|}}
+            <option>{{item}}</option>
+        {{/each}}
+    </select>
+</p>
