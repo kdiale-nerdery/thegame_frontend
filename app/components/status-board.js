@@ -151,12 +151,13 @@ export default Ember.Component.extend({
 
       item = items.filter(boundFilter);
 
-      if (item) {
+      if (item.length > 0) {
         break;
       }
     }
 
-    if (item) {
+    if (item.length > 0) {
+      console.log('Attempting to use ' + item[0].get('name'));
       item[0].use(undefined, false);
     }
   },
@@ -170,12 +171,12 @@ export default Ember.Component.extend({
 
       item = items.filter(boundFilter);
 
-      if (item) {
+      if (item.length > 0) {
         break;
       }
     }
 
-    if (item) {
+    if (item.length > 0) {
       this.get('store').findAll('leaderboard', {reload: true}).then(this.selectTarget.bind(this, item[0]));
     }
   },
