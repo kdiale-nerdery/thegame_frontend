@@ -10,6 +10,7 @@ export default Ember.Component.extend({
     'Pizza',
     'Pokeball',
     'Da Da Da Da Daaa Da DAA da da',
+    'UUDDLRLRBA',
     'Bo Jackson'
   ],
 
