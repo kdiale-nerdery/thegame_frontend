@@ -9,7 +9,7 @@ export default Model.extend({
   description: attr(),
   rarity: attr(),
 
-  use(target) {
+  use(target, addMessage = true) {
     let url;
     let uuid = this.get('uuid');
     if (target) {
@@ -26,21 +26,23 @@ export default Model.extend({
     }).then(response => {
       if (response && response.ok) {
         localStorage.setItem('lastItemUse', new Date());
-        response.json().then(this.processRequest.bind(this));
+        response.json().then(this.processRequest.bind(this, addMessage));
       }
     }).catch(error => {
       console.log(error);
     });
   },
 
-  processRequest(json) {
-    for (let message of json.Messages) {
-      this.get('store').createRecord(
-        'message',
-        {
-          content: message
-        }
-      ).save();
+  processRequest(addMessage, json) {
+    if (addMessage) {
+      for (let message of json.Messages) {
+        this.get('store').createRecord(
+          'message',
+          {
+            content: message
+          }
+        ).save();
+      }
     }
 
     this.deleteRecord();

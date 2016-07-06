@@ -3,10 +3,47 @@ import ENV from '../config/environment';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
+  passiveItems: [
+    'Buffalo',
+    'Biggs',
+    'Wedge',
+    'Pizza',
+    'Pokeball',
+    'Da Da Da Da Daaa Da DAA da da',
+    'Bo Jackson'
+  ],
+
+  offensiveItems: [
+    'Charizard',
+    'Buster Sword',
+    'Crowbar',
+    'Hard Knuckle',
+    'Holy Water',
+    'Red Shell',
+    'Green Shell',
+    'Banana Peel',
+    'Fire Flower',
+    'Hadouken'
+  ],
+
+  invulnerabilityEffects: [
+    'Gold Ring',
+    'Tanooki Suit',
+    'Carbuncle',
+    'Star'
+  ],
 
   init() {
     this._super(...arguments);
+    this.set('autopilotOptions', [
+      'Off',
+      'Passive',
+      'Offensive'
+    ]);
+
+    this.set('autopilotMode', 'off');
     this.schedulePointLoopTick();
+    this.scheduleItemLoopTick();
   },
 
   pointLoop() {
@@ -17,7 +54,7 @@ export default Ember.Component.extend({
     }
   },
 
-  retrieveInformation() {
+  secondsSinceLastItemUse() {
     const lastItemUseRaw = localStorage.getItem('lastItemUse');
     const lastItemUse = new Date(Date.parse(lastItemUseRaw));
 
@@ -27,6 +64,11 @@ export default Ember.Component.extend({
 
       this.set('secondsSinceLastUse', Math.round(differenceInSeconds));
     }
+  },
+
+  retrieveInformation() {
+    this.secondsSinceLastItemUse();
+
     fetch(`${ENV.gameURL}/points`, {
       method: 'POST',
       headers: {
@@ -41,6 +83,17 @@ export default Ember.Component.extend({
     }).catch(() => {
       this.schedulePointLoopTick();
     });
+  },
+
+  automateItemUsage() {
+    this.secondsSinceLastItemUse();
+
+    if (localStorage.getItem('apikey') && (this.get('secondsSinceLastUse') > 1)) {
+      this.retrieveItems().then(this.routeAutopilotMode.bind(this));
+    } else {
+    }
+
+    this.scheduleItemLoopTick();
   },
 
   processRequest(json) {
@@ -63,5 +116,102 @@ export default Ember.Component.extend({
 
   schedulePointLoopTick() {
     Ember.run.later(this, this.pointLoop, 1000);
+  },
+
+  scheduleItemLoopTick() {
+    Ember.run.later(this, this.automateItemUsage, 1000 * 61);
+  },
+
+  retrieveItems() {
+    return this.get('store').findAll('item');
+  },
+
+  routeAutopilotMode(items) {
+    switch(this.get('autopilotMode')) {
+      case 'passive':
+        this.decidePassiveItem(items);
+        break;
+      case 'offensive':
+        this.decideOffensiveItem(items);
+        break;
+    }
+  },
+
+  decideFullyAutomatedItem(items) {
+    console.log("I'm deciding the automation!");
+  },
+
+  decidePassiveItem(items){
+    let boundFilter;
+    let item;
+
+    for (let itemName of this.passiveItems) {
+      boundFilter = this.itemFilter.bind(this, itemName);
+
+      item = items.filter(boundFilter);
+
+      if (item) {
+        break;
+      }
+    }
+
+    if (item) {
+      item[0].use(undefined, false);
+    }
+  },
+
+  decideOffensiveItem(items){
+    let boundFilter;
+    let item;
+
+    for (let itemName of this.offensiveItems) {
+      boundFilter = this.itemFilter.bind(this, itemName);
+
+      item = items.filter(boundFilter);
+
+      if (item) {
+        break;
+      }
+    }
+
+    if (item) {
+      this.get('store').findAll('leaderboard', {reload: true}).then(this.selectTarget.bind(this, item[0]));
+    }
+  },
+
+  selectTarget(item, leaderboard) {
+    let validTargets = leaderboard.toArray().filter(player => {
+      let effects = player.get('Effects');
+
+      for (let invulnEffect of this.invulnerabilityEffects) {
+        if (effects.indexOf(invulnEffect) !== -1) {
+          return false;
+        }
+
+        return true;
+      }
+    });
+
+    if (validTargets) {
+      item.use(validTargets[0].get('PlayerName'), false);
+    }
+  },
+
+  itemFilter(name, item) {
+    if (item.get('name') === name) {
+      return true;
+    }
+
+    return false;
+  },
+
+
+  actions: {
+    selectAutoPilotMode() {
+      const index = this.$('select')[0].selectedIndex;
+      const mode = this.get('autopilotOptions')[index];
+
+      this.set('autopilotMode', mode.toLowerCase());
+    }
   }
 });
