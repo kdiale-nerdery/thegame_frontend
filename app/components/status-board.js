@@ -51,6 +51,21 @@ export default Ember.Component.extend({
   retrieveInformation() {
     this.secondsSinceLastItemUse();
 
+    if (!localStorage.getItem('you')) {
+      fetch(`${ENV.gameURL}/points`, {
+        method: 'get',
+        headers: {
+          apikey: localStorage.getItem('apikey')
+        }
+      }).then(response => {
+        if (response && response.ok) {
+          return response.json();
+        }
+      }).then(json => {
+        localStorage.setItem('you', json.Fields[0].PlayerName);
+      });
+    }
+
     fetch(`${ENV.gameURL}/points`, {
       method: 'POST',
       headers: {

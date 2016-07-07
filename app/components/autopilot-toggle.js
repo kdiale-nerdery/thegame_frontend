@@ -51,7 +51,7 @@ export default Ember.Component.extend({
   },
 
   scheduleItemLoopTick() {
-    Ember.run.later(this, this.automateItemUsage, 1000);
+    Ember.run.later(this, this.automateItemUsage, 1000 * 5);
   },
 
   retrieveItems() {

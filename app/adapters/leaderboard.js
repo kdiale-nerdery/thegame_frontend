@@ -1,11 +1,6 @@
-import DS from 'ember-data';
+import RemoteAPIAdapter from 'thegame-frontend/adapters/remote-api';
 
-export default DS.RESTAdapter.extend({
-  host: 'http://thegame.nerderylabs.com',
-  headers: {
-    accept: 'application/json'
-  },
-
+export default RemoteAPIAdapter.extend({
   pathForType() {
     return '';
   }
