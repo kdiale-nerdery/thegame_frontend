@@ -6,7 +6,7 @@ module.exports = function(environment) {
     environment: environment,
     baseURL: '/',
     locationType: 'auto',
-    gameURL: 'http://thegame.nerderylabs.com',
+    gameURL: 'http://thegame.nerderylabs.com:1337',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
