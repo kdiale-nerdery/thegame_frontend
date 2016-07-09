@@ -110,6 +110,7 @@ export default Ember.Component.extend({
     }
 
     if (item.length > 0) {
+      this.get('store').unloadAll('leaderboard');
       this.get('store').findAll('leaderboard', {reload: true}).then(this.selectTarget.bind(this, item[0]));
     }
   },
