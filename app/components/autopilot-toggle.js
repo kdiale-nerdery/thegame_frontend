@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from '../config/environment';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
@@ -110,14 +111,20 @@ export default Ember.Component.extend({
     }
 
     if (item.length > 0) {
-      this.get('store').unloadAll('leaderboard');
-      this.get('store').findAll('leaderboard', {reload: true}).then(this.selectTarget.bind(this, item[0]));
+      fetch(`${ENV.gameURL}/`, {
+        method: 'get',
+        headers: {
+          accept: 'application/json'
+        }
+      }).then(response => {
+        return response.json();
+      }).then(this.selectTarget.bind(this, item[0]));
     }
   },
 
   selectTarget(item, leaderboard) {
-    let validTargets = leaderboard.toArray().filter(player => {
-      let effects = player.get('Effects');
+    let validTargets = leaderboard.filter(player => {
+      let effects = player.Effects;
 
       for (let invulnEffect of this.invulnerabilityEffects) {
         if (effects.indexOf(invulnEffect) !== -1) {
@@ -128,7 +135,7 @@ export default Ember.Component.extend({
           return false;
         }
 
-        if (localStorage.getItem('you') === player.get('PlayerName')) {
+        if (localStorage.getItem('you') === player.PlayerName) {
           return false;
         }
 
@@ -137,9 +144,9 @@ export default Ember.Component.extend({
     });
 
     if (validTargets) {
-      console.log('Selecting target ' + validTargets[0].get('PlayerName'));
+      console.log('Selecting target ' + validTargets[0].PlayerName);
       console.log('Attempting to use ' + item.get('name'));
-      item.use(validTargets[0].get('PlayerName'), false);
+      item.use(validTargets[0].PlayerName, false);
     }
   },
 
