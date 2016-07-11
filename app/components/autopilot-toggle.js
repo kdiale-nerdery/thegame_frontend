@@ -33,9 +33,8 @@ export default Ember.Component.extend({
 
   invulnerabilityEffects: [
     'Gold Ring',
-    'Tanooki Suit',
-    'Carbuncle',
-    'Star'
+    'Star',
+    'Tanooki Suit'
   ],
 
   init() {
