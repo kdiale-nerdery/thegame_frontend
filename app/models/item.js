@@ -40,12 +40,12 @@ const item = Model.extend({
         localStorage.setItem(dateString, ++itemsUsedOnDate);
 
         response.json().then(this.processRequest.bind(this, addMessage));
+      } else {
+        this.deleteRecord();
+        this.save();
       }
     }).catch(error => {
       console.log(error);
-    }).then(() => {
-      this.deleteRecord();
-      this.save();
     });
   },
 
@@ -74,6 +74,9 @@ const item = Model.extend({
         ).save();
       }
     }
+
+    this.deleteRecord();
+    this.save();
   }
 });
 
