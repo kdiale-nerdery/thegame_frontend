@@ -43,6 +43,9 @@ const item = Model.extend({
       }
     }).catch(error => {
       console.log(error);
+    }).then(() => {
+      this.deleteRecord();
+      this.save();
     });
   },
 
@@ -71,9 +74,6 @@ const item = Model.extend({
         ).save();
       }
     }
-
-    this.deleteRecord();
-    this.save();
   }
 });
 
@@ -90,11 +90,21 @@ item.secondsSinceLastItemUse = function() {
 };
 
 item.mayUseItem = function() {
-  let badges = localStorage.getItem('badges').split(', ');
+  let badges = localStorage.getItem('badges');
+
+  if (badges) {
+    badges = badges.split(', ');
+  } else {
+    badges = [];
+  }
 
   let date = (new Date()).toISOString().split('T')[0];
   let dateString = `itemUseOn:${date}`;
   let itemsUsedOnDate = parseInt(localStorage.getItem(dateString));
+
+  if (!itemsUsedOnDate) {
+    itemsUsedOnDate = 0;
+  }
 
   return (
     (item.secondsSinceLastItemUse() > 61 || badges.indexOf('Vampire') !== -1) &&

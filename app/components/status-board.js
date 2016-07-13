@@ -27,17 +27,28 @@ export default Ember.Component.extend({
   mayRetrievePoints() {
     let key = localStorage.getItem('apikey');
 
-    let badges = localStorage.getItem('badges').split(', ');
+    let badges = localStorage.getItem('badges');
+    let allGhosts;
 
-    let filteredBadges = badges.filter(badge => {
-      return this.ghosts.indexOf(badge) !== -1;
-    });
+    if (badges) {
+      badges = badges.split(', ');
 
-    let allGhosts = filteredBadges.length === 4;
+      let filteredBadges = badges.filter(badge => {
+        return this.ghosts.indexOf(badge) !== -1;
+      });
+
+      allGhosts = filteredBadges.length === 4;
+    } else {
+      allGhosts = false;
+    }
 
     let date = (new Date()).toISOString().split('T')[0];
     let dateString = `pointsRetrievedOn:${date}`;
     let pointsRetrievedOnDate = parseInt(localStorage.getItem(dateString));
+    
+    if (!pointsRetrievedOnDate) {
+      pointsRetrievedOnDate = 0;
+    }
 
     return Boolean(key) && ((pointsRetrievedOnDate < 50000) || allGhosts);
   },
