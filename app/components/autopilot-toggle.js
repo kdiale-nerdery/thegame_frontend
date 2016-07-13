@@ -144,7 +144,7 @@ export default Ember.Component.extend({
       }
     });
 
-    if (validTargets) {
+    if (validTargets && validTargets[0]) {
       console.log('Selecting target ' + validTargets[0].PlayerName);
       console.log('Attempting to use ' + item.get('name'));
       item.use(validTargets[0].PlayerName, false);
