@@ -107,8 +107,8 @@ item.mayUseItem = function() {
   }
 
   return (
-    (item.secondsSinceLastItemUse() > 61 || badges.indexOf('Vampire') !== -1) &&
-    itemsUsedOnDate < 1100
+    (item.secondsSinceLastItemUse() > 61 && itemsUsedOnDate < 1100) ||
+    badges.indexOf('Vampire') !== -1
   );
 };
 
