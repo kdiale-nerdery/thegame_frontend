@@ -81,15 +81,17 @@ const item = Model.extend({
 });
 
 item.secondsSinceLastItemUse = function() {
-    const lastItemUseRaw = localStorage.getItem('lastItemUse');
-    const lastItemUse = new Date(Date.parse(lastItemUseRaw));
+  const lastItemUseRaw = localStorage.getItem('lastItemUse');
+  const lastItemUse = new Date(Date.parse(lastItemUseRaw));
 
-    if (lastItemUse) {
-      let now = new Date();
-      let differenceInSeconds = (now - lastItemUse) / 1000;
+  if (lastItemUse) {
+    let now = new Date();
+    let differenceInSeconds = (now - lastItemUse) / 1000;
 
-      return Math.round(differenceInSeconds);
-    }
+    return Math.round(differenceInSeconds);
+  }
+
+  return 0;
 };
 
 item.mayUseItem = function() {
