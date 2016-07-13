@@ -3,7 +3,7 @@ import attr from 'ember-data/attr';
 // import { belongsTo, hasMany } from 'ember-data/relationships';
 import ENV from '../config/environment';
 
-export default Model.extend({
+const item = Model.extend({
   uuid: attr(),
   name: attr(),
   description: attr(),
@@ -27,6 +27,18 @@ export default Model.extend({
     }).then(response => {
       if (response && response.ok) {
         localStorage.setItem('lastItemUse', new Date());
+
+        let date = (new Date()).toISOString().split('T')[0];
+        let dateString = `itemUseOn:${date}`;
+        let itemsUsedOnDate = parseInt(localStorage.getItem(dateString));
+
+        if (!itemsUsedOnDate) {
+          localStorage.setItem(dateString, 0);
+          itemsUsedOnDate = 0;
+        }
+
+        localStorage.setItem(dateString, ++itemsUsedOnDate);
+
         response.json().then(this.processRequest.bind(this, addMessage));
       }
     }).catch(error => {
@@ -64,3 +76,30 @@ export default Model.extend({
     this.save();
   }
 });
+
+item.secondsSinceLastItemUse = function() {
+    const lastItemUseRaw = localStorage.getItem('lastItemUse');
+    const lastItemUse = new Date(Date.parse(lastItemUseRaw));
+
+    if (lastItemUse) {
+      let now = new Date();
+      let differenceInSeconds = (now - lastItemUse) / 1000;
+
+      return Math.round(differenceInSeconds);
+    }
+};
+
+item.mayUseItem = function() {
+  let badges = localStorage.getItem('badges').split(', ');
+
+  let date = (new Date()).toISOString().split('T')[0];
+  let dateString = `itemUseOn:${date}`;
+  let itemsUsedOnDate = parseInt(localStorage.getItem(dateString));
+
+  return (
+    (item.secondsSinceLastItemUse() > 61 || badges.indexOf('Vampire') !== -1) &&
+    itemsUsedOnDate < 1100
+  );
+};
+
+export default item;

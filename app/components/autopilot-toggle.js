@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import ENV from '../config/environment';
+import Item from '../models/item';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
@@ -34,7 +35,8 @@ export default Ember.Component.extend({
   invulnerabilityEffects: [
     'Gold Ring',
     'Star',
-    'Tanooki Suit'
+    'Tanooki Suit',
+    'Morger\'s Beard'
   ],
 
   init() {
@@ -168,23 +170,16 @@ export default Ember.Component.extend({
   },
 
   secondsSinceLastItemUse() {
-    const lastItemUseRaw = localStorage.getItem('lastItemUse');
-    const lastItemUse = new Date(Date.parse(lastItemUseRaw));
-
-    if (lastItemUse) {
-      let now = new Date();
-      let differenceInSeconds = (now - lastItemUse) / 1000;
-
-      this.set('secondsSinceLastUse', Math.round(differenceInSeconds));
-    }
+    this.set('secondsSinceLastUse', Item.secondsSinceLastItemUse());
   },
 
   automateItemUsage() {
     this.secondsSinceLastItemUse();
 
-    if (localStorage.getItem('apikey') && (this.get('secondsSinceLastUse') > 61)) {
+    let badges = localStorage.getItem('badges').split(', ');
+
+    if (localStorage.getItem('apikey') && Item.mayUseItem()) {
       this.retrieveItems().then(this.routeAutopilotMode.bind(this));
-    } else {
     }
 
     this.scheduleItemLoopTick();

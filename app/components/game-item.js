@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import Item from '../models/item';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
@@ -6,23 +7,15 @@ export default Ember.Component.extend({
 
   actions: {
     use() {
-      const lastItemUseRaw = localStorage.getItem('lastItemUse');
-      const lastItemUse = new Date(Date.parse(lastItemUseRaw));
+      if (!Item.mayUseItem()) {
+        this.get('store').createRecord(
+          'message',
+          {
+            content: 'Too early to use an item! You may only use an item every 60 seconds.'
+          }
+        ).save();
 
-      if (lastItemUse) {
-        let now = new Date();
-        let differenceInSeconds = (now - lastItemUse) / 1000;
-
-        if (differenceInSeconds < 61) {
-          this.get('store').createRecord(
-            'message',
-            {
-              content: 'Too early to use an item! You may only use an item every 60 seconds.'
-            }
-          ).save();
-
-          return;
-        }
+        return;
       }
 
       const target = prompt('Who would you like to target?');

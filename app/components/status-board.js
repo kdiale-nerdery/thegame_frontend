@@ -1,8 +1,15 @@
 import Ember from 'ember';
 import ENV from '../config/environment';
+import Item from '../models/item';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
+  ghosts: [
+    'Power Pellet: Pinky',
+    'Power Pellet: Clyde',
+    'Power Pellet: Inky',
+    'Power Pellet: Binky'
+  ],
 
   init() {
     this._super(...arguments);
@@ -10,29 +17,58 @@ export default Ember.Component.extend({
   },
 
   pointLoop() {
-    if (localStorage.getItem('apikey')) {
+    if (this.mayRetrievePoints()) {
       this.retrieveInformation();
     } else {
       this.schedulePointLoopTick();
     }
   },
 
+  mayRetrievePoints() {
+    let key = localStorage.getItem('apikey');
+
+    let badges = localStorage.getItem('badges').split(', ');
+
+    let filteredBadges = badges.filter(badge => {
+      return this.ghosts.indexOf(badge) !== -1;
+    });
+
+    let allGhosts = filteredBadges.length === 4;
+
+    let date = (new Date()).toISOString().split('T')[0];
+    let dateString = `pointsRetrievedOn:${date}`;
+    let pointsRetrievedOnDate = parseInt(localStorage.getItem(dateString));
+
+    return Boolean(key) && ((pointsRetrievedOnDate < 50000) || allGhosts);
+  },
+
   secondsSinceLastItemUse() {
-    const lastItemUseRaw = localStorage.getItem('lastItemUse');
-    const lastItemUse = new Date(Date.parse(lastItemUseRaw));
-
-    if (lastItemUse) {
-      let now = new Date();
-      let differenceInSeconds = (now - lastItemUse) / 1000;
-
-      this.set('secondsSinceLastUse', Math.round(differenceInSeconds));
-    }
+    this.set('secondsSinceLastUse', Item.secondsSinceLastItemUse());
   },
 
   processRequest(json) {
     this.set('points', json.Points);
     localStorage.setItem('effects', json.Effects.join(', '));
     this.set('effects', json.Effects.join(', '));
+
+    let badges = json.Badges.map(badge => {
+      return badge.BadgeName;
+    });
+
+    localStorage.setItem('badges', badges.join(', '));
+    this.set('badges', badges.join(', '));
+
+    let date = (new Date()).toISOString().split('T')[0];
+    let dateString = `pointsRetrievedOn:${date}`;
+    let pointsRetrievedOnDate = parseInt(localStorage.getItem(dateString));
+
+    if (!pointsRetrievedOnDate) {
+      localStorage.setItem(dateString, 0);
+      pointsRetrievedOnDate = 0;
+    }
+
+    localStorage.setItem(dateString, ++pointsRetrievedOnDate);
+
 
     if (json.Item) {
       let fields = json.Item.Fields[0];
