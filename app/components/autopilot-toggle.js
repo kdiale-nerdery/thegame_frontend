@@ -176,8 +176,6 @@ export default Ember.Component.extend({
   automateItemUsage() {
     this.secondsSinceLastItemUse();
 
-    let badges = localStorage.getItem('badges').split(', ');
-
     if (localStorage.getItem('apikey') && Item.mayUseItem()) {
       this.retrieveItems().then(this.routeAutopilotMode.bind(this));
     }
