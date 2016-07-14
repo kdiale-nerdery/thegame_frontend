@@ -8,10 +8,20 @@ export default Ember.Component.extend({
   actions: {
     use() {
       if (!Item.mayUseItem()) {
+        let badges = localStorage.getItem('badges');
+
+        let seconds;
+
+        if (badges.indexOf('Vampire') !== -1) {
+          seconds = 15
+        } else {
+          seconds = 60
+        }
+
         this.get('store').createRecord(
           'message',
           {
-            content: 'Too early to use an item! You may only use an item every 60 seconds.'
+            content: `Too early to use an item! You may only use an item every ${seconds} seconds.`
           }
         ).save();
 
