@@ -84,14 +84,15 @@ item.secondsSinceLastItemUse = function() {
   const lastItemUseRaw = localStorage.getItem('lastItemUse');
   const lastItemUse = new Date(Date.parse(lastItemUseRaw));
 
-  if (lastItemUse) {
+  if (lastItemUseRaw) {
     let now = new Date();
     let differenceInSeconds = (now - lastItemUse) / 1000;
 
     return Math.round(differenceInSeconds);
   }
 
-  return 0;
+  // No item used, pick a super high number
+  return Infinity;
 };
 
 item.mayUseItem = function() {
