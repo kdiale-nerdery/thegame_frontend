@@ -13,9 +13,9 @@ export default Ember.Component.extend({
         let seconds;
 
         if (badges.indexOf('Vampire') !== -1) {
-          seconds = 15
+          seconds = 15;
         } else {
-          seconds = 60
+          seconds = 60;
         }
 
         this.get('store').createRecord(
