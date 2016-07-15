@@ -17,6 +17,13 @@ export default Ember.Component.extend({
   },
 
   pointLoop() {
+    this.secondsSinceLastItemUse();
+
+    if (this.get('stopPointLoop')) {
+      this.schedulePointLoopTick();
+      return;
+    }
+
     if (this.mayRetrievePoints()) {
       this.retrieveInformation();
     } else {
@@ -96,8 +103,6 @@ export default Ember.Component.extend({
   },
 
   retrieveInformation() {
-    this.secondsSinceLastItemUse();
-
     if (!localStorage.getItem('you')) {
       fetch(`${ENV.gameURL}/points`, {
         method: 'get',
