@@ -36,7 +36,7 @@ export default Ember.Component.extend({
     'Gold Ring',
     'Star',
     'Tanooki Suit',
-    'Morger\'s Beard'
+    'Morger Beard'
   ],
 
   init() {
@@ -44,7 +44,8 @@ export default Ember.Component.extend({
     this.set('autopilotOptions', [
       'Off',
       'Passive',
-      'Offensive'
+      'Offensive',
+      'Maintenance'
     ]);
 
     this.set('autopilotMode', 'off');
@@ -68,18 +69,53 @@ export default Ember.Component.extend({
       case 'offensive':
         this.decideOffensiveItem(items);
         break;
+      case 'maintenance':
+        this.decideMaintenanceItem(items);
+        break;
     }
   },
 
-  decideFullyAutomatedItem(items) {
-    console.log("I'm deciding the automation!");
+  decideMaintenanceItem(items) {
+    let boundFilter;
+    let item;
+
+    let effects = localStorage.getItem('effects');
+
+    if (effects) {
+      effects = effects.split(', ');
+    } else {
+      effects = [];
+    }
+
+    let currentMaintenanceEffects = this.invulnerabilityEffects.filter(this.currentEffectsFilter.bind(this, effects));
+
+    if (currentMaintenanceEffects.length >= 2) {
+      return;
+    }
+
+    let filteredMaintenanceItems = this.invulnerabilityEffects.filter(this.effectsFilter);
+
+    for (let itemName of filteredMaintenanceItems) {
+      boundFilter = this.itemFilter.bind(this, itemName);
+
+      item = items.toArray().filter(boundFilter);
+
+      if (item.length > 0) {
+        break;
+      }
+    }
+
+    if (item.length > 0) {
+      console.log('Attempting to use ' + item[0].get('name'));
+      item[0].use(undefined, false);
+    }
   },
 
   decidePassiveItem(items){
     let boundFilter;
     let item;
 
-    let filteredPassiveItems = this.passiveItems.filter(this.defensiveFilter);
+    let filteredPassiveItems = this.passiveItems.filter(this.effectsFilter);
 
     for (let itemName of filteredPassiveItems) {
       boundFilter = this.itemFilter.bind(this, itemName);
@@ -151,7 +187,15 @@ export default Ember.Component.extend({
     }
   },
 
-  defensiveFilter(item) {
+  currentEffectsFilter(effects, item) {
+    if (effects.indexOf(item) !== -1) {
+      return true;
+    }
+    
+    return false;
+  },
+
+  effectsFilter(item) {
     let effects = localStorage.getItem('effects').split(', ');
 
     if (effects.indexOf(item) !== -1) {
